@@ -1,5 +1,7 @@
 # Open Diff
 
+**This project is being actively developed and is not yet functional.**
+
 Open Diff is a tool that allows you to paste a unified diff (eg. from git, mercurial or the diff command line utility) and get a nicely rendered view of it with code highlighting, and a URL for you to share.
 
 In addition to simply being a place to store your diffs, people can view and comment on your diff freely, giving you a place to have open discussions about ways of doing things with strangers.
