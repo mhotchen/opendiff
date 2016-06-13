@@ -1,0 +1,10 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET  /             controllers.HomeController.welcome
+
+POST /d            controllers.DiffController.create
+GET  /d/:id        controllers.DiffController.get(id: String)
+
+GET  /assets/*file controllers.Assets.versioned(path="/public", file: Asset)

@@ -1,0 +1,7 @@
+@import models.diff.ParsedDiff
+@(diff: ParsedDiff, diffString: String)(implicit messages: Messages)
+
+@main("Your diff") {
+    <pre>@diff</pre>
+    <pre>@diffString</pre>
+}
