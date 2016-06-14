@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 import dao.DiffDao
 import models.diff.form.DiffForm
-import models.diff.parsers.UnifiedDiffParser
+import models.diff.Diff
 import play.api.i18n.I18nSupport
 import play.api.i18n.MessagesApi
 import play.api.mvc._
@@ -20,7 +20,7 @@ class DiffController @Inject()(val messagesApi: MessagesApi, val diffDao: DiffDa
 
   def get(requestedId: String) = Action.async {
     diffDao.findById(requestedId).map {
-      case Some(diff) => Ok(views.html.diff(UnifiedDiffParser.parse(diff._2), diff._2))
+      case Some(diff) => Ok(views.html.diff(Diff(diff._2), diff._2))
       case None => NotFound
     }
   }

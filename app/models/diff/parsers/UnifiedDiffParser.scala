@@ -43,9 +43,9 @@ class UnifiedDiffParser extends RegexParsers {
   }
 
   protected def line: Parser[Line] = contextLine | addedLine | deletedLine
-  protected def contextLine: Parser[ContextLine] = """ .*""".r<~newline ^^ {ContextLine(_)}
-  protected def addedLine: Parser[LineAdded] = """\+.*""".r<~newline ^^ {LineAdded(_)}
-  protected def deletedLine: Parser[LineRemoved] = """-.*""".r<~newline ^^ {LineRemoved(_)}
+  protected def contextLine: Parser[ContextLine] = """ .*""".r<~newline ^^ {s => ContextLine(s.substring(1))}
+  protected def addedLine: Parser[LineAdded] = """\+.*""".r<~newline ^^ {s => LineAdded(s.substring(1))}
+  protected def deletedLine: Parser[LineRemoved] = """-.*""".r<~newline ^^ {s => LineRemoved(s.substring(1))}
 
   protected def fileName: Parser[String] = """.+?(?=\t|\R)""".r
   protected def timestamp: Parser[String] = """.+?(?=\t|\R)""".r
