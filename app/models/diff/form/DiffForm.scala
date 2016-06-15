@@ -16,7 +16,7 @@ object DiffForm {
 
   val form = Form(
     mapping(
-      "diff" -> nonEmptyText(maxLength = 10240).verifying(diffConstraint)
+      "diff" -> nonEmptyText(maxLength = 102400).verifying(diffConstraint)
     )(DiffFields.apply)(DiffFields.unapply)
   )
 }

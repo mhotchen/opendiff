@@ -6,13 +6,14 @@ import javax.inject.Inject
 
 import dao.DiffDao
 import models.diff.form.DiffForm
-import models.diff.Diff
+import models.diff.{Diff, DiffError}
 import play.api.i18n.I18nSupport
 import play.api.i18n.MessagesApi
 import play.api.mvc._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.io.Source
 
 class DiffController @Inject()(val messagesApi: MessagesApi, val diffDao: DiffDao)
   extends Controller with I18nSupport
@@ -20,8 +21,19 @@ class DiffController @Inject()(val messagesApi: MessagesApi, val diffDao: DiffDa
 
   def get(requestedId: String) = Action.async {
     diffDao.findById(requestedId).map {
-      case Some(diff) => Ok(views.html.diff(Diff(diff._2), diff._2))
-      case None => NotFound
+      case Some(diff) =>
+        val parsedDiff = Diff(diff._2)
+        parsedDiff match {
+          case d: Diff => Ok(views.html.diff(d, diff._2))
+          case DiffError(_) => InternalServerError
+        }
+      case None =>
+        val testDiff = Source.fromFile("diff-tests/git/diff").mkString
+        val parsedDiff = Diff(testDiff)
+        parsedDiff match {
+          case d: Diff => Ok(views.html.diff(d, testDiff))
+          case DiffError(e) => println(e); InternalServerError
+        }
     }
   }
 
@@ -31,11 +43,10 @@ class DiffController @Inject()(val messagesApi: MessagesApi, val diffDao: DiffDa
         Future.successful(BadRequest(views.html.welcome(formWithErrors)))
       },
       userData => {
-        val diff = if (userData.diff.endsWith("\n")) userData.diff else userData.diff + "\n"
         val id = java.util.UUID.randomUUID.toString
         val createdAt = LocalDateTime.now()
         diffDao
-          .insert(id, diff, createdAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+          .insert(id, userData.diff, createdAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
           .map(_ => Redirect(routes.DiffController.get(id.toString)))
       }
     )

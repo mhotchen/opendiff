@@ -13,6 +13,10 @@ case class Diff(files: List[FileDiff]) extends ParsedDiff {
 }
 
 case class FileDiff(oldFile: FileMeta, newFile: FileMeta, changeChunks: List[ChangeChunk]) {
+  lazy val isAdded = (for (c <- changeChunks; l <- c.changeLines if !l.isAdded) yield l).isEmpty
+  lazy val isRemoved = (for (c <- changeChunks; l <- c.changeLines if !l.isRemoved) yield l).isEmpty
+  lazy val hasChangedName = oldFile.name != newFile.name
+
   override def toString = "--- %s\n+++ %s".format(oldFile, newFile) + ("\n" /: changeChunks) (_ + _)
 }
 case class FileMeta(name: String, timeStamp: String) {
@@ -25,7 +29,14 @@ case class RangeInformation(oldOffset: Int, oldLength: Int, newOffset: Int, newL
   override def toString = "@@ -%d,%d +%d,%d @@".format(oldOffset, oldLength, newOffset, newLength)
 }
 
-sealed trait Line {def line: String}
+sealed trait Line {
+  def line: String
+  override def toString: String
+
+  lazy val isAdded = isInstanceOf[LineAdded]
+  lazy val isRemoved = isInstanceOf[LineRemoved]
+  lazy val isContext = isInstanceOf[ContextLine]
+}
 case class LineAdded(line: String) extends Line {
   override def toString = "+" + line
 }

@@ -8,5 +8,5 @@ class GitDiffParser extends UnifiedDiffParser {
   override def oldFile: Parser[FileMeta] = "--- "~>fileName<~newline ^^ {s => FileMeta(normalizeFileName(s), "")}
   override def newFile: Parser[FileMeta] = "+++ "~>fileName<~newline ^^ {s => FileMeta(normalizeFileName(s), "")}
 
-  private def normalizeFileName(fileName: String) = fileName.replaceFirst("""^a|b\/""", "")
+  private def normalizeFileName(fileName: String) = fileName.replaceFirst("""^(a|b)\/""", "")
 }

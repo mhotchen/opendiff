@@ -17,14 +17,14 @@
     <p>If the above isn't giving you back a URL then it's most likely because your diff is empty or you've hit one of the abuse limits outlined below. Try sending the diff through the below form instead:</p>
 
     @helper.form(action = routes.DiffController.create()) {
-        @helper.textarea(form("diff"))
+        @helper.textarea(form("diff"), '_label -> "Paste your diff here", 'cols -> 120, 'rows -> 20, '_showConstraints -> false)
         <button type="submit">Submit</button>
     }
 
     <h2>Abuse</h2>
     <p>In order to prevent abuse the following limitations are in place:</p>
     <ul>
-        <li>The diff can't be larger than 10kb</li>
+        <li>The diff can't be larger than 100kb</li>
         <li>You can't submit more than 100 diffs in a single day from a single IP address</li>
         <li>Diffs are hosted ephemerally and will be deleted after 90 days</li>
     </ul>

@@ -1,0 +1,40 @@
+article, aside, details, figcaption, figure, footer, header, nav, section { display: block; }
+
+html { font-size: 75%; }
+html, input, textarea { font-family: monospace; color: #222; background: transparent; }
+
+body { margin: 0; padding: 10px; }
+input, textarea, body, button { font: 400 100% monospace; }
+
+dd, dt { margin: 0; }
+li { margin: 5px 0; }
+
+textarea { border: 1px solid #222; padding: 1em; }
+
+.main { max-width: 130em; margin: 0 auto; }
+
+dd.error { font-weight: bold; color: #960000; }
+code { background-color: #f4f4f4; padding: 1px; border-radius: 1px; }
+a { color: #006396; text-decoration: none; }
+
+.file { width: 100%; clear: both; padding-top: 2em; }
+.file h2 { overflow: hidden; margin-top: 0; margin-bottom: 0; }
+.file .original,
+.file .changed { width: 48%; float: left; }
+.file .original { margin-right: 4%; }
+.file .chunk { clear: both; display: flex; }
+.file .chunk > .original,
+.file .chunk > .changed { flex: 1; overflow-x: auto; }
+.file .line-numbers { text-align: right; margin-right: 2%; width: 4%; overflow: hidden; color: #aaa; float: left; }
+.file .lines { width: 94%; float: left; }
+.file .line { white-space: pre; }
+.file.added .original,
+.file.removed .changed { visibility: hidden; }
+
+.chunk > .original .line.added { display: none; }
+.chunk > .original .line.removed { color: #960000; }
+
+.chunk > .changed .line.removed { display: none; }
+.chunk > .changed .line.added { color: #209600; }
+
+.raw { clear: both; }
