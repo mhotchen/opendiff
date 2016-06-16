@@ -5,7 +5,7 @@
     <p><a href="/">Home</a></p>
     <section class="diff">
         @for(file <- diff.files) {
-            <div class="file @if(file.isAdded) {added} @if(file.isRemoved) {removed}">
+            <div class="file @if(file.isAdded){added} @if(file.isRemoved){removed}">
                 <h2 class="original" id="original-@file.oldFile.name">@file.oldFile.name <a href="#original-@file.oldFile.name">(link)</a></h2>
                 @if(file.hasChangedName) {
                     <h2 class="changed" id="changed-@file.newFile.name">@file.newFile.name <a href="#changed-@file.newFile.name">(link)</a></h2>
@@ -20,19 +20,19 @@
                             </div>
                             <div class="lines">
                                 @for(line <- chunk.changeLines if !line.isAdded) {
-                                    <p class="line @if(line.isRemoved) {removed}">@if(line.line == ""){&nbsp;}else{@line.line}</p>
+                                    <p class="line @if(line.isRemoved){removed}">@if(line.line == ""){&nbsp;}else{@line.line}</p>
                                 }
                             </div>
                         </div>
                         <div class="changed">
                             <div class="line-numbers">
-                            @for(lineNo <- 0 until chunk.rangeInformation.newLength) {
-                                <p class="line-number">@(lineNo+chunk.rangeInformation.newOffset)</p>
-                            }
+                                @for(lineNo <- 0 until chunk.rangeInformation.newLength) {
+                                    <p class="line-number">@(lineNo+chunk.rangeInformation.newOffset)</p>
+                                }
                             </div>
                             <div class="lines">
                                 @for(line <- chunk.changeLines if !line.isRemoved) {
-                                    <p class="line @if(line.isAdded) {added}">@if(line.line == ""){&nbsp;}else{@line.line}</p>
+                                    <p class="line @if(line.isAdded){added}">@if(line.line == ""){&nbsp;}else{@line.line}</p>
                                 }
                             </div>
                         </div>
@@ -45,10 +45,12 @@
     <section class="stats">
         <h2>Stats</h2>
         <ul>
-            <li>@((for(f <- diff.files; c <- f.changeChunks; l <- c.changeLines; if l.isAdded) yield 1).sum) lines added</li>
-            <li>@((for(f <- diff.files; c <- f.changeChunks; l <- c.changeLines; if l.isRemoved) yield 1).sum) lines removed</li>
-            <li>@((for(f <- diff.files; if f.isAdded) yield 1).sum) files added</li>
-            <li>@((for(f <- diff.files; if f.isRemoved) yield 1).sum) files removed</li>
+            @defining(diff.files.flatMap(_.changeChunks.flatMap(_.changeLines))) { lines =>
+                <li>@lines.count(_.isAdded) lines added</li>
+                <li>@lines.count(_.isRemoved) lines removed</li>
+            }
+            <li>@diff.files.count(_.isAdded) files added</li>
+            <li>@diff.files.count(_.isRemoved) files removed</li>
         </ul>
     </section>
 
