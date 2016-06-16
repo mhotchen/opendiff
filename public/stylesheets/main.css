@@ -36,5 +36,3 @@ a { color: #006396; text-decoration: none; }
 
 .chunk > .changed .line.removed { display: none; }
 .chunk > .changed .line.added { color: #209600; }
-
-.raw { clear: both; }
