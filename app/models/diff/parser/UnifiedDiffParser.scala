@@ -1,14 +1,13 @@
-package models.diff.parsers
+package models.diff.parser
 
 import scala.util.parsing.combinator.RegexParsers
-import models.diff._
 
 // http://stackoverflow.com/questions/3560073/how-to-write-parser-for-unified-diff-syntax
 // was inspiration, although it was quite far off the mark
 class UnifiedDiffParser extends RegexParsers {
   override def skipWhitespace = false
 
-  def diff: Parser[Diff] = rep("""(diff.*\R)?""".r~>fileDiff) ^^ {Diff(_)}
+  def diff: Parser[ValidDiff] = rep("""(diff.*\R)?""".r~>fileDiff) ^^ {ValidDiff(_)}
 
   protected def fileDiff: Parser[FileDiff] = oldFile~newFile~rep1(changeChunk) ^^ {
     case of~nf~l => FileDiff(of, nf, l)
@@ -59,8 +58,8 @@ object UnifiedDiffParser {
   def parse(diff: String): ParsedDiff = {
     val parser = getParser(diff)
     parser.parseAll(parser.diff, diff) match {
-      case parser.Success(e: Diff, _) => e
-      case f: parser.NoSuccess => new DiffError(f.msg)
+      case parser.Success(e: ValidDiff, _) => e
+      case f: parser.NoSuccess => new ParseError(f.msg)
     }
   }
   def getParser(diff: String): UnifiedDiffParser =

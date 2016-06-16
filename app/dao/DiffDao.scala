@@ -2,32 +2,34 @@ package dao
 
 import javax.inject.Inject
 
+import models.diff.Diff
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.db.slick.HasDatabaseConfigProvider
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-
-import scala.concurrent.Future
 import slick.driver.JdbcProfile
 
-class DiffDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
+import scala.concurrent.Future
+
+class DiffDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
+  extends HasDatabaseConfigProvider[JdbcProfile]
+{
   import driver.api._
 
   private val Diffs = TableQuery[DiffTable]
 
-  def findById(id: String): Future[Option[(String, String, String)]] =
-    db.run(Diffs.filter(_.id === id).result.headOption)
+  def all(): Future[Seq[Diff]] = db.run(Diffs.result)
 
-  def all(): Future[Seq[(String, String, String)]] = db.run(Diffs.result)
+  def findById(id: String): Future[Option[Diff]] = db.run(Diffs.filter(_.id === id).result.headOption)
 
-  def insert(id: String, diff: String, createdAt: String): Future[Unit] = {
-    db.run(Diffs += (id, diff, createdAt)).map(_ => ())
-  }
+  def latest(amount: Int): Future[Seq[Diff]] = db.run(Diffs.sortBy(_.createdAt.desc).take(amount).result)
 
-  private class DiffTable(tag: Tag) extends Table[(String, String, String)](tag, "diff") {
+  def insert(d: Diff): Future[Unit] = db.run(Diffs += d).map(_ => ())
+
+  private class DiffTable(tag: Tag) extends Table[Diff](tag, "diff") {
     def id = column[String]("id", O.PrimaryKey)
     def diff = column[String]("diff")
     def createdAt = column[String]("created_at")
 
-    def * = (id, diff, createdAt)
+    def * = (id, diff, createdAt) <> (Diff.tupled, Diff.unapply)
   }
 }

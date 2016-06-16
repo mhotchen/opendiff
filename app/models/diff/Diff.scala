@@ -1,52 +1,7 @@
 package models.diff
 
-import models.diff.parsers.UnifiedDiffParser
+import models.diff.parser.ValidDiff
 
-sealed trait ParsedDiff
-case class DiffError(error: String) extends ParsedDiff {
-  override def toString = error
-}
-case class Diff(files: List[FileDiff]) extends ParsedDiff {
-  override def toString = ("" /: files) {(s, f) =>
-    s + "diff %s %s\n".format(f.oldFile.name, f.newFile.name) + f
-  }
-}
-
-case class FileDiff(oldFile: FileMeta, newFile: FileMeta, changeChunks: List[ChangeChunk]) {
-  lazy val isAdded = (for (c <- changeChunks; l <- c.changeLines if !l.isAdded) yield l).isEmpty
-  lazy val isRemoved = (for (c <- changeChunks; l <- c.changeLines if !l.isRemoved) yield l).isEmpty
-  lazy val hasChangedName = oldFile.name != newFile.name
-
-  override def toString = "--- %s\n+++ %s".format(oldFile, newFile) + ("\n" /: changeChunks) (_ + _)
-}
-case class FileMeta(name: String, timeStamp: String) {
-  override def toString = name + (if (timeStamp != "") "\t" + timeStamp else "")
-}
-case class ChangeChunk(rangeInformation: RangeInformation, changeLines: List[Line]) {
-  override def toString = rangeInformation.toString + ("\n" /: changeLines) (_ + _ + "\n")
-}
-case class RangeInformation(oldOffset: Int, oldLength: Int, newOffset: Int, newLength: Int) {
-  override def toString = "@@ -%d,%d +%d,%d @@".format(oldOffset, oldLength, newOffset, newLength)
-}
-
-sealed trait Line {
-  def line: String
-  override def toString: String
-
-  lazy val isAdded = isInstanceOf[LineAdded]
-  lazy val isRemoved = isInstanceOf[LineRemoved]
-  lazy val isContext = isInstanceOf[ContextLine]
-}
-case class LineAdded(line: String) extends Line {
-  override def toString = "+" + line
-}
-case class LineRemoved(line: String) extends Line {
-  override def toString = "-" + line
-}
-case class ContextLine(line: String) extends Line {
-  override def toString = " " + line
-}
-
-object Diff {
-  def apply(diff: String) = UnifiedDiffParser.parse(diff)
+case class Diff(id: String, diff: String, createdAt: String) {
+  lazy val parsedDiff = ValidDiff(diff)
 }

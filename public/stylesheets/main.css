@@ -12,6 +12,10 @@ li { margin: 5px 0; }
 textarea { border: 1px solid #222; padding: 1em; }
 
 .main { max-width: 130em; margin: 0 auto; }
+.welcome,
+.latest-diffs { float: left; width: 48%; }
+.welcome { margin-right: 4%; }
+textarea[name=diff] { width: 100%; }
 
 dd.error { font-weight: bold; color: #960000; }
 code { background-color: #f4f4f4; padding: 1px; border-radius: 1px; }

@@ -1,10 +1,10 @@
 @import models.diff.Diff
-@(diff: Diff, diffString: String)(implicit messages: Messages)
+@(diff: Diff)(implicit messages: Messages)
 
 @main("Your diff") {
     <p><a href="/">Home</a></p>
     <section class="diff">
-        @for(file <- diff.files) {
+        @for(file <- diff.parsedDiff.files) {
             <div class="file @if(file.isAdded){added} @if(file.isRemoved){removed}">
                 <h2 class="original" id="original-@file.oldFile.name">@file.oldFile.name <a href="#original-@file.oldFile.name">(link)</a></h2>
                 @if(file.hasChangedName) {
@@ -45,17 +45,17 @@
     <section class="stats">
         <h2>Stats</h2>
         <ul>
-            @defining(diff.files.flatMap(_.changeChunks.flatMap(_.changeLines))) { lines =>
+            @defining(diff.parsedDiff.files.flatMap(_.changeChunks.flatMap(_.changeLines))) { lines =>
                 <li>@lines.count(_.isAdded) lines added</li>
                 <li>@lines.count(_.isRemoved) lines removed</li>
             }
-            <li>@diff.files.count(_.isAdded) files added</li>
-            <li>@diff.files.count(_.isRemoved) files removed</li>
+            <li>@diff.parsedDiff.files.count(_.isAdded) files added</li>
+            <li>@diff.parsedDiff.files.count(_.isRemoved) files removed</li>
         </ul>
     </section>
 
     <section class="raw">
         <h2>Raw diff</h2>
-        <pre>@diffString</pre>
+        <pre>@diff.diff</pre>
     </section>
 }

@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 import dao.DiffDao
 import models.diff.form.DiffForm
-import models.diff.{Diff, DiffError}
+import models.diff.Diff
 import play.api.i18n.I18nSupport
 import play.api.i18n.MessagesApi
 import play.api.mvc._
@@ -21,32 +21,23 @@ class DiffController @Inject()(val messagesApi: MessagesApi, val diffDao: DiffDa
 
   def get(requestedId: String) = Action.async {
     diffDao.findById(requestedId).map {
-      case Some(diff) =>
-        val parsedDiff = Diff(diff._2)
-        parsedDiff match {
-          case d: Diff => Ok(views.html.diff(d, diff._2))
-          case DiffError(_) => InternalServerError
-        }
+      case Some(diff) => Ok(views.html.diff(diff))
       case None =>
         val testDiff = Source.fromFile("diff-tests/git/diff").mkString
-        val parsedDiff = Diff(testDiff)
-        parsedDiff match {
-          case d: Diff => Ok(views.html.diff(d, testDiff))
-          case DiffError(e) => println(e); InternalServerError
-        }
+        Ok(views.html.diff(Diff("0000", testDiff, "2016-06-06T00:00:00.000+000")))
     }
   }
 
   def create = Action.async { implicit request =>
     DiffForm.form.bindFromRequest.fold(
       formWithErrors => {
-        Future.successful(BadRequest(views.html.welcome(formWithErrors)))
+        Future.successful(BadRequest(views.html.welcome(formWithErrors, Nil)))
       },
       userData => {
         val id = java.util.UUID.randomUUID.toString
         val createdAt = LocalDateTime.now()
         diffDao
-          .insert(id, userData.diff, createdAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+          .insert(Diff(id, userData.diff, createdAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
           .map(_ => Redirect(routes.DiffController.get(id.toString)))
       }
     )
