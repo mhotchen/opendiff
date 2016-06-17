@@ -10,26 +10,28 @@ import slick.driver.JdbcProfile
 
 import scala.concurrent.Future
 
-class DiffDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
-  extends HasDatabaseConfigProvider[JdbcProfile]
-{
+trait DiffComponent { self: HasDatabaseConfigProvider[JdbcProfile] =>
   import driver.api._
 
-  private val Diffs = TableQuery[DiffTable]
-
-  def all(): Future[Seq[Diff]] = db.run(Diffs.result)
-
-  def findById(id: String): Future[Option[Diff]] = db.run(Diffs.filter(_.id === id).result.headOption)
-
-  def latest(amount: Int): Future[Seq[Diff]] = db.run(Diffs.sortBy(_.createdAt.desc).take(amount).result)
-
-  def insert(d: Diff): Future[Unit] = db.run(Diffs += d).map(_ => ())
-
-  private class DiffTable(tag: Tag) extends Table[Diff](tag, "diff") {
+  protected class DiffTable(tag: Tag) extends Table[Diff](tag, "diff") {
     def id = column[String]("id", O.PrimaryKey)
     def diff = column[String]("diff")
     def createdAt = column[String]("created_at")
 
     def * = (id, diff, createdAt) <> (Diff.tupled, Diff.unapply)
   }
+}
+
+class DiffDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
+  extends HasDatabaseConfigProvider[JdbcProfile] with DiffComponent {
+
+  import driver.api._
+
+  private val Diffs = TableQuery[DiffTable]
+
+  def findById(id: String): Future[Option[Diff]] = db.run(Diffs.filter(_.id === id).result.headOption)
+
+  def latest(amount: Int): Future[Seq[Diff]] = db.run(Diffs.sortBy(_.createdAt.desc).take(amount).result)
+
+  def insert(d: Diff): Future[Unit] = db.run(Diffs += d).map(_ => ())
 }

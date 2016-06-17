@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-import dao.DiffDao
+import dao.{AnimalDao, DiffDao}
 import models.diff.form.DiffForm
 import models.diff.Diff
 import play.api.i18n.I18nSupport
@@ -12,10 +12,11 @@ import play.api.i18n.MessagesApi
 import play.api.mvc._
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration.Duration
 import scala.io.Source
 
-class DiffController @Inject()(val messagesApi: MessagesApi, val diffDao: DiffDao)
+class DiffController @Inject()(val messagesApi: MessagesApi, val diffDao: DiffDao, val animalDao: AnimalDao)
   extends Controller with I18nSupport
 {
 
@@ -34,11 +35,16 @@ class DiffController @Inject()(val messagesApi: MessagesApi, val diffDao: DiffDa
         Future.successful(BadRequest(views.html.welcome(formWithErrors, Nil)))
       },
       userData => {
-        val id = java.util.UUID.randomUUID.toString
-        val createdAt = LocalDateTime.now()
-        diffDao
-          .insert(Diff(id, userData.diff, createdAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
-          .map(_ => Redirect(routes.DiffController.get(id.toString)))
+        Await.result(
+          animalDao.randomAnimalWithName.map {
+            case Some(id) =>
+              diffDao
+                .insert(Diff(id, userData.diff, LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
+                .map(_ => Redirect(routes.DiffController.get(id)))
+            case _ => Future.successful(InternalServerError)
+          },
+          Duration(30, "s")
+        )
       }
     )
   }
