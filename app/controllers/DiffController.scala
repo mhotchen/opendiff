@@ -19,13 +19,12 @@ import scala.io.Source
 class DiffController @Inject()(val messagesApi: MessagesApi, val diffDao: DiffDao, val animalDao: AnimalDao)
   extends Controller with I18nSupport
 {
-
   def get(requestedId: String) = Action.async {
     diffDao.findById(requestedId).map {
       case Some(diff) => Ok(views.html.diff(diff))
       case None =>
         val testDiff = Source.fromFile("diff-tests/git/diff").mkString
-        Ok(views.html.diff(Diff("0000", testDiff, "2016-06-06T00:00:00.000+000")))
+        Ok(views.html.diff(Diff(requestedId, testDiff, "2016-06-06T00:00:00.000+000")))
     }
   }
 
