@@ -47,6 +47,7 @@ a { color: #006396; text-decoration: none; }
 
 .line form { float: left; width: 6%; padding-right: 2%; }
 .line label { cursor: pointer; color: #aaa; text-align: right; display: block; float: left; width: 100%; }
+.line label:hover { color: #222; }
 .line input[type=checkbox] { display: none; }
 .line textarea,
 .line button { display: none; margin-left: 160%; }

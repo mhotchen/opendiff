@@ -18,7 +18,7 @@
                                 @for(lineNo <- 0 until chunk.rangeInformation.oldLength) {
                                     <div class="line">
                                         @helper.form(action = routes.CommentController.create()) {
-                                            <label for="show-original-@file.oldFile.name-@file.newFile.name-@(lineNo + chunk.rangeInformation.newOffset)">@(lineNo + chunk.rangeInformation.newOffset) +</label>
+                                            <label title="Add a comment" for="show-original-@file.oldFile.name-@file.newFile.name-@(lineNo + chunk.rangeInformation.newOffset)">@(lineNo + chunk.rangeInformation.newOffset) ✎</label>
                                             <input type="checkbox" id="show-original-@file.oldFile.name-@file.newFile.name-@(lineNo + chunk.rangeInformation.newOffset)" />
                                             <input type="hidden" name="diff" value="@diff.id" />
                                             <input type="hidden" name="original-file" value="@file.oldFile.name" />
@@ -51,7 +51,7 @@
                                 @for(lineNo <- 0 until chunk.rangeInformation.newLength) {
                                     <div class="line">
                                         @helper.form(action = routes.CommentController.create()) {
-                                            <label for="show-changed-@file.oldFile.name-@file.newFile.name-@(lineNo + chunk.rangeInformation.newOffset)">@(lineNo + chunk.rangeInformation.newOffset) +</label>
+                                            <label title="Add a comment" for="show-changed-@file.oldFile.name-@file.newFile.name-@(lineNo + chunk.rangeInformation.newOffset)">@(lineNo + chunk.rangeInformation.newOffset) ✎</label>
                                             <input type="checkbox" id="show-changed-@file.oldFile.name-@file.newFile.name-@(lineNo + chunk.rangeInformation.newOffset)" />
                                             <input type="hidden" name="diff" value="@diff.id" />
                                             <input type="hidden" name="original-file" value="@file.oldFile.name" />
