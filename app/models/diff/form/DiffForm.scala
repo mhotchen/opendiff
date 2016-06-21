@@ -7,11 +7,10 @@ import play.api.data.validation._
 
 object DiffForm {
   val diffConstraint: Constraint[String] = Constraint("constraints.diff") {
-    plainText =>
-      ParsedDiff(plainText) match {
-        case ParseError(e) => Invalid(ValidationError(e))
-        case ValidDiff(_) => Valid
-      }
+    plainText => ParsedDiff(plainText) match {
+      case ParseError(e) => Invalid(ValidationError(e))
+      case ValidDiff(_) => Valid
+    }
   }
 
   val form = Form(

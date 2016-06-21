@@ -1,5 +1,6 @@
 @import models.diff.Diff
-@(diff: Diff)(implicit messages: Messages)
+@import models.comment.Comment
+@(diff: Diff, comments: Seq[Comment])(implicit messages: Messages)
 
 @main("Your diff") {
     <p><a href="/">Home</a></p>
@@ -13,28 +14,70 @@
                 @for(chunk <- file.changeChunks) {
                     <div class="chunk">
                         <div class="original">
-                            <div class="line-numbers">
+                            @defining(chunk.changeLines.filter(!_.isAdded)) { lines =>
                                 @for(lineNo <- 0 until chunk.rangeInformation.oldLength) {
-                                    <p class="line-number">@(lineNo+chunk.rangeInformation.oldOffset)</p>
+                                    <div class="line">
+                                        @helper.form(action = routes.CommentController.create()) {
+                                            <label for="show-original-@file.oldFile.name-@file.newFile.name-@(lineNo + chunk.rangeInformation.newOffset)">@(lineNo + chunk.rangeInformation.newOffset) +</label>
+                                            <input type="checkbox" id="show-original-@file.oldFile.name-@file.newFile.name-@(lineNo + chunk.rangeInformation.newOffset)" />
+                                            <input type="hidden" name="diff" value="@diff.id" />
+                                            <input type="hidden" name="original-file" value="@file.oldFile.name" />
+                                            <input type="hidden" name="changed-file" value="@file.newFile.name" />
+                                            <input type="hidden" name="line-number" value="@(lineNo + chunk.rangeInformation.oldOffset)" />
+                                            <input type="hidden" name="on-original" value="true" />
+                                            <textarea name="comment"></textarea>
+                                            <button type="submit">Submit</button>
+                                        }
+
+                                        <p class="content @if(lines(lineNo).isRemoved){removed}">@if(lines(lineNo).line == ""){&nbsp;}else{@lines(lineNo).line}</p>
+
+                                        <div class="comments">
+                                            @for(
+                                                c <- comments
+                                                if c.originalFile == file.oldFile.name
+                                                if c.changedFile == file.newFile.name
+                                                if c.lineNumber == lineNo + chunk.rangeInformation.oldOffset
+                                                if c.onOriginal
+                                            ) {
+                                                <p class="comment">@c.comment</p>
+                                            }
+                                        </div>
+                                    </div>
                                 }
-                            </div>
-                            <div class="lines">
-                                @for(line <- chunk.changeLines if !line.isAdded) {
-                                    <p class="line @if(line.isRemoved){removed}">@if(line.line == ""){&nbsp;}else{@line.line}</p>
-                                }
-                            </div>
+                            }
                         </div>
                         <div class="changed">
-                            <div class="line-numbers">
+                            @defining(chunk.changeLines.filter(!_.isRemoved)) { lines =>
                                 @for(lineNo <- 0 until chunk.rangeInformation.newLength) {
-                                    <p class="line-number">@(lineNo+chunk.rangeInformation.newOffset)</p>
+                                    <div class="line">
+                                        @helper.form(action = routes.CommentController.create()) {
+                                            <label for="show-changed-@file.oldFile.name-@file.newFile.name-@(lineNo + chunk.rangeInformation.newOffset)">@(lineNo + chunk.rangeInformation.newOffset) +</label>
+                                            <input type="checkbox" id="show-changed-@file.oldFile.name-@file.newFile.name-@(lineNo + chunk.rangeInformation.newOffset)" />
+                                            <input type="hidden" name="diff" value="@diff.id" />
+                                            <input type="hidden" name="original-file" value="@file.oldFile.name" />
+                                            <input type="hidden" name="changed-file" value="@file.newFile.name" />
+                                            <input type="hidden" name="line-number" value="@(lineNo + chunk.rangeInformation.newOffset)" />
+                                            <input type="hidden" name="on-original" value="false" />
+                                            <textarea name="comment"></textarea>
+                                            <button type="submit">Submit</button>
+                                        }
+
+                                        <p class="content @if(lines(lineNo).isAdded){added}">@if(lines(lineNo).line == ""){&nbsp;}else{@lines(lineNo).line}</p>
+
+                                        <div class="comments">
+                                            @for(
+                                                c <- comments
+                                                if c.originalFile == file.oldFile.name
+                                                if c.changedFile == file.newFile.name
+                                                if c.lineNumber == lineNo + chunk.rangeInformation.newOffset
+                                                if c.onChanged
+                                            ) {
+                                                <p class="comment">@c.comment</p>
+                                            }
+                                        </div>
+                                    </div>
                                 }
-                            </div>
-                            <div class="lines">
-                                @for(line <- chunk.changeLines if !line.isRemoved) {
-                                    <p class="line @if(line.isAdded){added}">@if(line.line == ""){&nbsp;}else{@line.line}</p>
-                                }
-                            </div>
+                            }
                         </div>
                     </div>
                 }

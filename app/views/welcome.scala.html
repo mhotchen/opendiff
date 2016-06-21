@@ -36,7 +36,7 @@
             <h2>Latest diffs</h2>
             <ul>
                 @for(d <- latestDiffs) {
-                    <li><a href="@routes.DiffController.get(d.id)">@d.id (@d.createdAt)</a></li>
+                    <li><a href="@routes.DiffController.get(d.id.get)">@d.id.get (@d.createdAt)</a></li>
                 }
             </ul>
         </section>

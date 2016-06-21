@@ -4,7 +4,7 @@ html { font-size: 75%; }
 html, input, textarea { font-family: monospace; color: #222; background: transparent; }
 
 body { margin: 0; padding: 10px; }
-input, textarea, body, button { font: 400 100% monospace; }
+input, textarea, body, button { font: 400 100%/1.6em monospace; }
 
 dd, dt { margin: 0; }
 li { margin: 5px 0; }
@@ -26,17 +26,30 @@ a { color: #006396; text-decoration: none; }
 .file .original,
 .file .changed { width: 48%; float: left; }
 .file .original { margin-right: 4%; }
-.file .chunk { clear: both; display: flex; }
+
+.file .chunk { clear: both; display: flex; margin-top: 3em; }
 .file .chunk > .original,
 .file .chunk > .changed { flex: 1; overflow-x: auto; }
-.file .line-numbers { text-align: right; margin-right: 2%; width: 4%; overflow: hidden; color: #aaa; float: left; }
-.file .lines { width: 94%; float: left; }
-.file .line { white-space: pre; }
+
 .file.added .original,
 .file.removed .changed { visibility: hidden; }
 
-.chunk > .original .line.added { display: none; }
-.chunk > .original .line.removed { color: #960000; }
+.line { clear: both; }
+.line p { margin: 0; }
 
-.chunk > .changed .line.removed { display: none; }
-.chunk > .changed .line.added { color: #209600; }
+.line .content { white-space: pre; float: left; width: 92%; }
+.line .content.removed { color: #960000; }
+.line .content.added { color: #209600; }
+
+.line .comments { color: #aaa; clear: both; }
+.line .comments:empty { display: none; }
+.line .comments .comment { margin-left: 10%; white-space: pre; margin-bottom: .5em; padding-bottom: .5em; border-bottom: 1px solid #eee; }
+
+.line form { float: left; width: 6%; padding-right: 2%; }
+.line label { cursor: pointer; color: #aaa; text-align: right; display: block; float: left; width: 100%; }
+.line input[type=checkbox] { display: none; }
+.line textarea,
+.line button { display: none; margin-left: 160%; }
+.line textarea { width: 1433%; height: 100px; margin-bottom: 1em; }
+.line form > input:checked ~ textarea,
+.line form > input:checked ~ button { display: block; }

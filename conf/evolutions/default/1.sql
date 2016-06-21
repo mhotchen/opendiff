@@ -1,8 +1,29 @@
 # --- !Ups
 
-CREATE TABLE "diff" ("id" VARCHAR(50) NOT NULL PRIMARY KEY, "diff" VARCHAR(102400) NOT NULL, "created_at" VARCHAR(25) NOT NULL);
-CREATE TABLE "animal" ("name" VARCHAR(100) NOT NULL);
-CREATE TABLE "first_name" ("name" VARCHAR(100) NOT NULL);
+CREATE TABLE "diff" (
+  "id" VARCHAR(100) NOT NULL PRIMARY KEY,
+  "diff" VARCHAR(102400) NOT NULL,
+  "created_at" VARCHAR(25) NOT NULL -- TODO change to an actual date type when moving away from H2
+);
+CREATE TABLE "comment" (
+  "id" INT PRIMARY KEY AUTO_INCREMENT,
+  "comment" VARCHAR(102400) NOT NULL,
+  "diff_id" VARCHAR(100),
+  "original_file" VARCHAR(200),
+  "changed_file" VARCHAR(200),
+  "line_number" INT,
+  "on_original" BOOLEAN
+);
+CREATE TABLE "animal" ("name" VARCHAR(50) NOT NULL);
+CREATE TABLE "first_name" ("name" VARCHAR(50) NOT NULL);
+
+INSERT INTO "comment" VALUES
+  (NULL, 'A comment', 't', 'app/controllers/DiffController.scala', 'app/controllers/DiffController.scala', 2, true),
+  (NULL, 'Another comment', 't', 'app/controllers/DiffController.scala', 'app/controllers/DiffController.scala', 2, true),
+  (NULL, 'A comment', 't', 'app/controllers/DiffController.scala', 'app/controllers/DiffController.scala', 10, false),
+  (NULL, 'A
+multiline comment
+  This line should be indented', 't', 'app/controllers/DiffController.scala', 'app/controllers/DiffController.scala', 10, false);
 
 INSERT INTO "animal" VALUES
   ('AdeliePenguin'),

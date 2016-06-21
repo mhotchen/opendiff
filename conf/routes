@@ -7,4 +7,6 @@ GET  /             controllers.HomeController.welcome
 POST /d            controllers.DiffController.create
 GET  /d/:id        controllers.DiffController.get(id: String)
 
+POST /comments     controllers.CommentController.create
+
 GET  /assets/*file controllers.Assets.versioned(path="/public", file: Asset)
