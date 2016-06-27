@@ -1,8 +1,6 @@
 package models.diff.parser
 
-sealed trait ParsedDiff {
-  lazy val valid = isInstanceOf[ValidDiff]
-}
+sealed trait ParsedDiff
 
 case class ParseError(error: String) extends ParsedDiff {
   override def toString = error

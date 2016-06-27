@@ -1,5 +1,7 @@
 @import models.diff.Diff
+@import models.diff.Implicits._
 @import models.comment.Comment
+@import java.time.format.DateTimeFormatter
 @(diff: Diff, comments: Seq[Comment])(implicit messages: Messages)
 
 @main("Your diff") {
@@ -94,7 +96,7 @@
             }
             <li>@diff.parsedDiff.files.count(_.isAdded) files added</li>
             <li>@diff.parsedDiff.files.count(_.isRemoved) files removed</li>
-            <li>Created at @diff.createdAt</li>
+            <li>Created at @diff.createdAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)</li>
         </ul>
     </section>
 

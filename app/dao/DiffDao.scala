@@ -1,5 +1,6 @@
 package dao
 
+import java.sql.Timestamp
 import javax.inject.Inject
 
 import models.diff.Diff
@@ -17,7 +18,7 @@ trait DiffComponent { self: HasDatabaseConfigProvider[JdbcProfile] =>
   protected class DiffTable(tag: Tag) extends Table[Diff](tag, "diff") {
     def id = column[String]("id", O.PrimaryKey)
     def diff = column[String]("diff")
-    def createdAt = column[String]("created_at")
+    def createdAt = column[Timestamp]("created_at")
 
     def * = (id.?, diff, createdAt) <> (Diff.tupled, Diff.unapply)
   }
@@ -44,6 +45,8 @@ class DiffDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
       val diff = Diff(generateId, d.diff, d.createdAt)
       db.run(Diffs += diff).map(_ => diff)
   }
+
+  def deleteOlderThan(timestamp: Timestamp): Future[Int] = db.run(Diffs.filter(_.createdAt < timestamp).delete)
 
   private def generateId = Await.result(randomAnimalWithName, Duration(20, "s")) match {
     case Some(id) => Some(id)

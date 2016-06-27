@@ -1,5 +1,7 @@
 @import models.diff.form.DiffFields
 @import models.diff.Diff
+@import models.diff.Implicits._
+@import java.time.format.DateTimeFormatter
 @(form: Form[DiffFields], latestDiffs: Seq[Diff])(implicit messages: Messages)
 
 @main("Welcome to Open Diff") {
@@ -36,7 +38,7 @@
             <h2>Latest diffs</h2>
             <ul>
                 @for(d <- latestDiffs) {
-                    <li><a href="@routes.DiffController.get(d.id.get)">@d.id.get (@d.createdAt)</a></li>
+                    <li><a href="@routes.DiffController.get(d.id.get)">@d.id.get (@d.createdAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))</a></li>
                 }
             </ul>
         </section>

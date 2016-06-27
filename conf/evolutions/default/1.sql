@@ -3,7 +3,7 @@
 CREATE TABLE "diff" (
   "id" VARCHAR(100) NOT NULL PRIMARY KEY,
   "diff" VARCHAR(102400) NOT NULL,
-  "created_at" VARCHAR(25) NOT NULL -- TODO change to an actual date type when moving away from H2
+  "created_at" TIMESTAMP NOT NULL
 );
 CREATE TABLE "comment" (
   "id" INT PRIMARY KEY AUTO_INCREMENT,
@@ -22,8 +22,7 @@ INSERT INTO "comment" VALUES
   (NULL, 'Another comment', 't', 'app/controllers/DiffController.scala', 'app/controllers/DiffController.scala', 2, true),
   (NULL, 'A comment', 't', 'app/controllers/DiffController.scala', 'app/controllers/DiffController.scala', 10, false),
   (NULL, 'A
-multiline comment
-  This line should be indented', 't', 'app/controllers/DiffController.scala', 'app/controllers/DiffController.scala', 10, false);
+multiline comment', 't', 'app/controllers/DiffController.scala', 'app/controllers/DiffController.scala', 10, false);
 
 INSERT INTO "animal" VALUES
   ('AdeliePenguin'),
