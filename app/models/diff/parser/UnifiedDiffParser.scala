@@ -59,7 +59,7 @@ object UnifiedDiffParser {
     val parser = getParser(diff)
     parser.parseAll(parser.diff, diff) match {
       case parser.Success(e: ValidDiff, _) => e
-      case f: parser.NoSuccess => new ParseError(f.msg)
+      case f: parser.NoSuccess => ParseError(f.msg)
     }
   }
   def getParser(diff: String): UnifiedDiffParser =
