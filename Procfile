@@ -1,1 +1,1 @@
-web: target/universal/stage/bin/myapp -Dconfig.resource=prod.conf
+web: target/universal/stage/bin/opendiff -Dconfig.resource=prod.conf
