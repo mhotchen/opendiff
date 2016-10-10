@@ -17,7 +17,7 @@
                     <div class="chunk">
                         <div class="original">
                             @defining(chunk.changeLines.filter(!_.isAdded)) { lines =>
-                                @for(lineNo <- 0 until chunk.rangeInformation.oldLength) {
+                                @for(lineNo <- lines.indices) {
                                     <div class="line">
                                         @helper.form(action = routes.CommentController.create()) {
                                             <label title="Add a comment" for="show-original-@file.oldFile.name-@file.newFile.name-@(lineNo + chunk.rangeInformation.newOffset)">@(lineNo + chunk.rangeInformation.newOffset) ✎</label>
@@ -50,7 +50,7 @@
                         </div>
                         <div class="changed">
                             @defining(chunk.changeLines.filter(!_.isRemoved)) { lines =>
-                                @for(lineNo <- 0 until chunk.rangeInformation.newLength) {
+                                @for(lineNo <- lines.indices) {
                                     <div class="line">
                                         @helper.form(action = routes.CommentController.create()) {
                                             <label title="Add a comment" for="show-changed-@file.oldFile.name-@file.newFile.name-@(lineNo + chunk.rangeInformation.newOffset)">@(lineNo + chunk.rangeInformation.newOffset) ✎</label>
