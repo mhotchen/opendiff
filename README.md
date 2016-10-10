@@ -29,3 +29,11 @@ Or you can run the application using `java`, `scala` or the generated binary set
 * `-Dslick.dbs.default.db.url=jdbc:postgresql://localhost/opendiff`
 * `-Dslick.dbs.default.db.user=opendiff`
 * `-Dslick.dbs.default.db.password=opendiff`
+
+If you're going to be running it in production mode then you'll need to configure an application secret:
+
+* `APPLICATION_SECRET=supersecret`
+
+Or:
+
+* `-Dplay.crypto.secret=supersecret`
