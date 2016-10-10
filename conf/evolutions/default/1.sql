@@ -6,7 +6,7 @@ CREATE TABLE "diff" (
   "created_at" TIMESTAMP NOT NULL
 );
 CREATE TABLE "comment" (
-  "id" INT PRIMARY KEY AUTO_INCREMENT,
+  "id" SERIAL PRIMARY KEY,
   "comment" VARCHAR(102400) NOT NULL,
   "diff_id" VARCHAR(100),
   "original_file" VARCHAR(200),

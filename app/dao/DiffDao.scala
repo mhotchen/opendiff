@@ -32,7 +32,7 @@ class DiffDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   private val Animals = TableQuery[AnimalTable]
   private val FirstNames = TableQuery[FirstNameTable]
   private val Diffs = TableQuery[DiffTable]
-  private val rand = SimpleFunction.nullary[Double]("rand")
+  private val random = SimpleFunction.nullary[Double]("random")
   private val concat3 = SimpleFunction.ternary[String, String, String, String]("concat")
 
   def findById(id: String): Future[Option[Diff]] = db.run(Diffs.filter(_.id === id).result.headOption)
@@ -55,8 +55,8 @@ class DiffDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
 
   private def randomAnimalWithName: Future[Option[String]] = db.run(
     (for {
-      a <- Animals.sortBy(x => rand)
-      n <- FirstNames.sortBy(x => rand)
+      a <- Animals.sortBy(x => random)
+      n <- FirstNames.sortBy(x => random)
       if Diffs.filter(concat3(n.name, "The", a.name) === _.id).length === 0
     } yield concat3(n.name, "The", a.name))
       .take(1)
