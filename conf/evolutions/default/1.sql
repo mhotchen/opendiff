@@ -17,13 +17,6 @@ CREATE TABLE "comment" (
 CREATE TABLE "animal" ("name" VARCHAR(50) NOT NULL);
 CREATE TABLE "first_name" ("name" VARCHAR(50) NOT NULL);
 
-INSERT INTO "comment" VALUES
-  (NULL, 'A comment', 't', 'app/controllers/DiffController.scala', 'app/controllers/DiffController.scala', 2, true),
-  (NULL, 'Another comment', 't', 'app/controllers/DiffController.scala', 'app/controllers/DiffController.scala', 2, true),
-  (NULL, 'A comment', 't', 'app/controllers/DiffController.scala', 'app/controllers/DiffController.scala', 10, false),
-  (NULL, 'A
-multiline comment', 't', 'app/controllers/DiffController.scala', 'app/controllers/DiffController.scala', 10, false);
-
 INSERT INTO "animal" VALUES
   ('AdeliePenguin'),
   ('Affenpinscher'),
@@ -5726,5 +5719,6 @@ INSERT INTO "first_name" VALUES
 # --- !Downs
 
 DROP TABLE "diff";
+DROP TABLE "comment";
 DROP TABLE "animal";
 DROP TABLE "first_name";
