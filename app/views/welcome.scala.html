@@ -13,9 +13,9 @@
         <p>To get started you can submit a diff below or preferably submit them via curl which will keep formatting better than copying and pasting. Alternatively you can review other people's diffs in the side menu.</p>
         <h2>Use from the command line to get a URL:</h2>
         <ul>
-            <li>git: <code>curl -o /dev/null -s --data-urlencode "diff=$(git diff)" -w "%{redirect_url}\n" localhost:9000/d</code></li>
-            <li>mercurial: <code>curl -o /dev/null -s --data-urlencode "diff=$(hg diff)" -w "%{redirect_url}\n" localhost:9000/d</code></li>
-            <li>diff: <code>curl -o /dev/null -s --data-urlencode "diff=$(diff -u <em>$FILE1 $FILE2</em>)" -w "%{redirect_url}\n" localhost:9000/d</code></li>
+            <li>git: <code>curl -o /dev/null -s --data-urlencode "diff=$(git diff)" -w "%{redirect_url}\n" diff.mhn.me/d</code></li>
+            <li>mercurial: <code>curl -o /dev/null -s --data-urlencode "diff=$(hg diff)" -w "%{redirect_url}\n" diff.mhn.me/d</code></li>
+            <li>diff: <code>curl -o /dev/null -s --data-urlencode "diff=$(diff -u <em>$FILE1 $FILE2</em>)" -w "%{redirect_url}\n" diff.mhn.me/d</code></li>
         </ul>
         <p>If the above isn't giving you back a URL then it's most likely because your diff is empty or you've hit one of the abuse limits outlined below. Try sending the diff through the below form instead:</p>
 

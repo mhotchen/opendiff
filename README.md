@@ -8,9 +8,9 @@ To get started you can submit a diff via curl as demonstrated below:
 
 ## Use from the command line to get a URL:
 
-* git: `curl -o /dev/null -s --data-urlencode "diff=$(git diff)" -w "%{redirect_url}\n" localhost:9000/d`
-* mercurial: `curl -o /dev/null -s --data-urlencode "diff=$(hg diff)" -w "%{redirect_url}\n" localhost:9000/d`
-* diff: `curl -o /dev/null -s --data-urlencode "diff=$(diff -u $FILE1 $FILE2)" -w "%{redirect_url}\n" localhost:9000/d`
+* git: `curl -o /dev/null -s --data-urlencode "diff=$(git diff)" -w "%{redirect_url}\n" diff.mhn.me/d`
+* mercurial: `curl -o /dev/null -s --data-urlencode "diff=$(hg diff)" -w "%{redirect_url}\n" diff.mhn.me/d`
+* diff: `curl -o /dev/null -s --data-urlencode "diff=$(diff -u $FILE1 $FILE2)" -w "%{redirect_url}\n" diff.mhn.me/d`
 
 If the above isn't giving you back a URL then it's most likely because your diff is empty or you've hit one of the abuse limits outlined below. Try sending the diff through the below form instead:
 
