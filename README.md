@@ -12,7 +12,7 @@ To get started you can submit a diff via curl as demonstrated below:
 * mercurial: `curl -o /dev/null -s --data-urlencode "diff=$(hg diff)" -w "%{redirect_url}\n" diff.mhn.me/d`
 * diff: `curl -o /dev/null -s --data-urlencode "diff=$(diff -u $FILE1 $FILE2)" -w "%{redirect_url}\n" diff.mhn.me/d`
 
-If the above isn't giving you back a URL then it's most likely because your diff is empty or you've hit one of the abuse limits outlined below. Try sending the diff through the below form instead:
+If the above isn't giving you back a URL then it's most likely because your diff is empty or you've hit one of the abuse limits outlined below. Try sending the diff through the form on the [home page](http://diff.mhn.me) instead.
 
 ## Running
 
