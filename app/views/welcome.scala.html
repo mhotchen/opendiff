@@ -7,18 +7,24 @@
 @main("Welcome to Open Diff") {
     <section class="welcome">
         <h1>Welcome to Open Diff</h1>
-
-        <p>Open Diff is a tool that allows you to paste a unified diff (eg. from git, mercurial or the <code>diff</code> command line utility) and get a nicely rendered view of it with code highlighting, and a URL for you to share.</p>
+        <p>Open Diff is a an <a href="https://github.com/mhotchen/opendiff">open source web app</a> that allows you to paste a unified diff and get a nicely rendered view of it with a URL for you to share.</p>
         <p>In addition to simply being a place to store your diffs, people can view and comment on your diff freely, giving you a place to have open discussions about ways of doing things with strangers.</p>
-        <p>To get started you can submit a diff below or preferably submit them via curl which will keep formatting better than copying and pasting. Alternatively you can review other people's diffs in the side menu.</p>
-        <h2>Use from the command line to get a URL:</h2>
-        <ul>
-            <li>git: <code>curl -o /dev/null -s --data-urlencode "diff=$(git diff)" -w "%{redirect_url}\n" diff.mhn.me/d</code></li>
-            <li>mercurial: <code>curl -o /dev/null -s --data-urlencode "diff=$(hg diff)" -w "%{redirect_url}\n" diff.mhn.me/d</code></li>
-            <li>diff: <code>curl -o /dev/null -s --data-urlencode "diff=$(diff -u <em>$FILE1 $FILE2</em>)" -w "%{redirect_url}\n" diff.mhn.me/d</code></li>
-        </ul>
-        <p>If the above isn't giving you back a URL then it's most likely because your diff is empty or you've hit one of the abuse limits outlined below. Try sending the diff through the below form instead:</p>
+        <p>To get started you can submit a diff below or preferably submit them via curl which will keep formatting better than copying and pasting. Alternatively you can view and discuss other people's diffs in the side menu.</p>
 
+        <h2>How to get a unified diff</h2>
+        <ul>
+            <li>git: <code>git diff</code></li>
+            <li>mercurial: <code>hg diff</code></li>
+            <li>GNU diff: <code>diff -u <em>$FILE1</em> <em>$FILE2</em></code></li>
+        </ul>
+
+        <h2>Use from the command line</h2>
+        <p>Paste the following shell function in your .profile, .bashrc, or wherever:</p>
+        <code>function opendiff { curl -o /dev/null -s --data-urlencode "diff=$(cat)" -w "%{redirect_url}\n" diff.mhn.me/d; }</code>
+        <p>You can then pipe any diff to it like so and get a URL back: <code>git diff | opendiff</code></p>
+        <p>If the above isn't giving you back a URL then it's most likely because your diff is empty or too large. Try sending the diff through the below form instead.</p>
+
+        <h2>Use from a web browser</h2>
         @helper.form(action = routes.DiffController.create()) {
             @helper.textarea(form("diff"), '_label -> "Paste your diff here", 'cols -> 80, 'rows -> 20, '_showConstraints -> false)
             <button type="submit">Submit</button>
@@ -28,10 +34,9 @@
         <p>In order to prevent abuse the following limitations are in place:</p>
         <ul>
             <li>The diff can't be larger than 100kb</li>
-            <li>You can't submit more than 100 diffs in a single day from a single IP address</li>
             <li>Diffs are hosted ephemerally and will be deleted after 90 days</li>
         </ul>
-        <p>This allows me to host the service at only a modest cost to myself</p>
+        <p>This allows me to host the service at only a modest cost to myself.</p>
     </section>
     @if(latestDiffs.nonEmpty) {
         <section class="latest-diffs">
